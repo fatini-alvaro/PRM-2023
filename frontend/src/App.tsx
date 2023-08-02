@@ -1,8 +1,17 @@
+import TopicCard from "./components/TopicCard"
+import {Divider} from '@mui/material'
+
 function App() {
 
   return (
     <div id="App">
-      <h1>opa</h1>
+      <TopicCard/>
+      <Divider />
+      <TopicCard/>
+      <Divider />
+      <TopicCard/>
+      <Divider />
+      <TopicCard/>
     </div>
   )
 }
