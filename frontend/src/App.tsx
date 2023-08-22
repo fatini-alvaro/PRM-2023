@@ -1,23 +1,14 @@
-import TopicCard from "./components/TopicCard"
-import { Divider } from '@mui/material'
-import TopicCardSkeleton from "./components/TopicCardSkeleton"
-import  HeaderProfile  from "./components/HeaderProfile"
+import TopicPage from "./pages/Topic/index"
+
 
 function App() {
 
   return (
-    <div id="App">
-      <HeaderProfile/>
-      <TopicCard/>
-      <Divider />
-      <TopicCard/>
-      <Divider />
-      <TopicCard/>
-      <Divider />
-      <TopicCard/>
-      <Divider />
-      <TopicCardSkeleton />
-    </div>
+      <div id="App">
+        
+        <TopicPage />
+
+      </div>
   )
 }
 

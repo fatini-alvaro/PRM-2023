@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "intl": "^1.2.5",
+    "react-intl": "^6.4.4"
+  }
+}
