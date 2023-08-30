@@ -1,15 +1,21 @@
 import { Box } from "@mui/material";
 import HeaderProfile from "../../components/HeaderProfile";
 import TopicList from "../../components/TopicList";
+import { useEffect, useState } from "react";
 
 function TopicPage() {
-  const profile = {
-    fullname: "Alvaro Fatini",
-    username: "fatiniAlvaro",
-    description:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Possimus repellendus at in dolorem ad nemo, cupiditate earum modi facere molestias quasi vero accusantium quaerat dolore ducimus nobis eaque quo tempora.",
-    createdAt: "2022-08-13",
-  };
+
+  const [profile, SetProfile] = useState({});
+
+  useEffect(() => {
+
+    fetch('http://localhost:3000/profile')
+      .then(res => res.json())
+      .then(data => {
+        SetProfile(data);
+      });
+
+  }, [])
 
   const topics = [
     {
