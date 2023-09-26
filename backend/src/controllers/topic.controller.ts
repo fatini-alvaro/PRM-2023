@@ -19,7 +19,7 @@ export class TopicController {
 
     @Post()
     create(@Body() topic: Topic): Promise<Topic> {
-        return this.service,this.create(topic)
+        return this.service.create(topic)
     }
 
     @Delete(':id')

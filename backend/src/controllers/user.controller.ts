@@ -19,7 +19,7 @@ export class UserController {
 
     @Post()
     create(@Body() user: User): Promise<User> {
-        return this.service,this.create(user)
+        return this.service.create(user)
     }
 
     @Delete(':id')
