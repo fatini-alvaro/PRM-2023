@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, HttpCode, Param, ParseIntPipe, Post } fr
 import { Topic } from "src/entities/topic.entity";
 import { TopicService } from "src/services/topic.service";
 
-@Controller('topic')
+@Controller('topics')
 export class TopicController {
 
     constructor(private readonly service: TopicService){}
