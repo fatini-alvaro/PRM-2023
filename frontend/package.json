@@ -14,11 +14,13 @@
     "@emotion/styled": "^11.11.0",
     "@fontsource/roboto": "^5.0.5",
     "@mui/icons-material": "^5.14.1",
+    "@mui/lab": "^5.0.0-alpha.150",
     "@mui/material": "^5.14.2",
     "intl": "^1.2.5",
     "react": "^17.0.0 || ^18.0.0",
     "react-dom": "^17.0.0 || ^18.0.0",
-    "react-intl": "^6.4.4"
+    "react-intl": "^6.4.4",
+    "react-router-dom": "^6.17.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.15",
