@@ -1,19 +1,37 @@
-import { Box } from "@mui/material";
+import { Alert, Box, Snackbar } from "@mui/material";
 import HeaderProfile from "../../components/HeaderProfile";
 import TopicList from "../../components/TopicList";
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { useAuth } from "../../hook/useAuth";
+import { getProfileByUsername } from "../../services";
 
 function TopicPage() {
 
+  //Profile
+  const { user } = useAuth();
+  const params = useParams();
+
   const [profile, SetProfile] = useState({});
+  
+  //State - Error Message
+  const [messageError, setMessageError] = useState('');
 
   useEffect(() => {
 
-    fetch('http://localhost:3000/profile')
-      .then(res => res.json())
-      .then(data => {
-        SetProfile(data);
-      });
+    const username = params.username ? params.username : user?.username;
+
+    if (username) {
+      getProfileByUsername(username)
+      .then(result => {
+        SetProfile(result.data);
+
+        //TO-DO: Carregar topics do usuario (owner)
+      })
+      .catch(error => {
+        setMessageError(String(error.message));
+      })
+    }
 
   }, [])
 
@@ -67,6 +85,19 @@ function TopicPage() {
       <HeaderProfile user={profile} />
 
       <TopicList items={topics} />
+
+      <Snackbar
+          open={Boolean(messageError)}
+          autoHideDuration={600}
+          anchorOrigin={{vertical:'top', horizontal: 'right'}}>
+          
+          <Alert severity="error" 
+          variant="filled"
+          onClose={() => setMessageError('')}>
+              {messageError}
+          </Alert>
+
+      </Snackbar>
     </Box>
   );
 }

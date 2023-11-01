@@ -33,10 +33,20 @@ function SignUpPage() {
         event.preventDefault();
 
         setLoading(true);
+        setMessageError('');
+        setMessageSuccess('');
 
         try {
             await register(userForm);
-            navigate('/');
+
+            setUserForm({
+                fullname: '',
+                username: '',
+                password: '',
+                description: ''
+            });
+
+            setMessageSuccess('Usuário criado com sucesso.');
 
         } catch (e) {
             const error = e as Error;
