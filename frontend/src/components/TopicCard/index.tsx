@@ -9,8 +9,11 @@ type TopicCardProps = {
 function TopicCard({ topic }: TopicCardProps) {
   return (
     <div id="topic-card">
-      <TopicCardHeader />
-      <TopicCardBody />
+      <TopicCardHeader
+        createdAt={topic.createdAt}
+        owner={topic.owner}
+      />
+      <TopicCardBody content={topic.content}/>
       <TopicCardActions />
     </div>
   );

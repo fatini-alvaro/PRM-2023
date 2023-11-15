@@ -1,10 +1,12 @@
-import { Alert, Box, Snackbar } from "@mui/material";
+import { Alert, Box, Fab, Snackbar, Tab, Tabs, TextField } from "@mui/material";
 import HeaderProfile from "../../components/HeaderProfile";
 import TopicList from "../../components/TopicList";
-import { useEffect, useState } from "react";
+import { SyntheticEvent, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useAuth } from "../../hook/useAuth";
-import { getProfileByUsername } from "../../services";
+import { getProfileByUsername, getTopicsByUsername } from "../../services";
+import { IUser } from "../../@types";
+import AddIcon from '@mui/icons-material/Add'
 
 function TopicPage() {
 
@@ -12,21 +14,42 @@ function TopicPage() {
   const { user } = useAuth();
   const params = useParams();
 
-  const [profile, SetProfile] = useState({});
+  const [profile, SetProfile] = useState<IUser>({});
   
   //State - Error Message
   const [messageError, setMessageError] = useState('');
+  const [messageSuccess, setMessageSuccess] = useState('');
+  const [loading, setLoading] = useState(false);
+  
+  //TOPICS
+  const [profileTopics, setProfileTopics] = useState([]);
+  const [topics, setTopics] = useState([]);
+
+  //TABS
+  const [tab, setTab] = useState(1);
+  function handleTabChange(event: SyntheticEvent, newValue: number){
+    setTab(newValue);
+  }
+
+  //NEW TOPIC
+  const [showForm, SetShowForm] = useState(false)
+
+  function handleShowForm() {
+    SetShowForm(true);
+  }
 
   useEffect(() => {
 
     const username = params.username ? params.username : user?.username;
-
     if (username) {
       getProfileByUsername(username)
       .then(result => {
         SetProfile(result.data);
 
-        //TO-DO: Carregar topics do usuario (owner)
+        return getTopicsByUsername(username)
+        .then(result => { 
+          setProfileTopics(result.data)
+        });
       })
       .catch(error => {
         setMessageError(String(error.message));
@@ -35,44 +58,17 @@ function TopicPage() {
 
   }, [])
 
-  const topics = [
-    {
-      owner: { fullname: "lula da silva" },
-      content:
-        "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Veritatis dignissimos officiis adipisci provident aut, vero vel mollitia commodi necessitatibus tempore unde dicta deleniti eius, ab excepturi ducimus quas. Minima, consequuntur.",
-      comments: 12,
-      reposts: 12,
-      likes: 31,
-      creatAt: "2023-08-01 19:23:00",
-    },
-    {
-      owner: { fullname: "Bolsonaro " },
-      content:
-        "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Veritatis dignissimos officiis adipisci provident aut, vero vel mollitia commodi necessitatibus tempore unde dicta deleniti eius, ab excepturi ducimus quas. Minima, consequuntur.",
-      comments: 17,
-      reposts: 4,
-      likes: 78,
-      creatAt: "2023-08-01 19:23:00",
-    },
-    {
-      owner: { fullname: "Marina silva" },
-      content:
-        "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Veritatis dignissimos officiis adipisci provident aut, vero vel mollitia commodi necessitatibus tempore unde dicta deleniti eius ab excepturi ducimus quas. Minima, consequuntur.",
-      comments: 15,
-      reposts: 78,
-      likes: 22,
-      creatAt: "2023-08-01 19:23:00",
-    },
-    {
-      owner: { fullname: "Nando moura" },
-      content:
-        "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Veritatis dignissimos officiis adipisci provident aut, vero vel mollitia commodi necessitatibus tempore unde dicta deleniti eius, ab excepturi ducimus quas. Minima, consequuntur.",
-      comments: 152,
-      reposts: 191,
-      likes: 383,
-      creatAt: "2023-08-01 19:23:00",
-    },
-  ];
+  useEffect(() => {
+    if (tab == 1){
+      getTopicsByUsername()
+        .then(result => { 
+          setTopics(result.data)
+        })
+        .catch(error => {
+          setMessageError(String(error.message));
+        })
+    }
+  }, [tab])
 
   return (
     <Box
@@ -84,7 +80,53 @@ function TopicPage() {
     >
       <HeaderProfile user={profile} />
 
-      <TopicList items={topics} />
+      <Box className="topic-page-content" style={{width: '64rem'}}>
+
+        {profile?.id == user?.id && (
+          <Tabs value={tab} onChange={handleTabChange}>
+              <Tab value={1} label="Tópicos" />
+              <Tab value={2} label="Meus Tópicos" />
+          </Tabs>
+        )}
+
+        {tab == 2 ? (
+          <Box display="flex" flexDirection="column" alignItems="end">     
+            {!showForm && (
+              <Fab color="primary" style={{marginTop: '-3.5rem'}}
+              onClick={handleShowForm}>
+                <AddIcon />
+              </Fab>
+            )}   
+
+            {showForm && (
+              <Box display="flex" flexDirection="column" alignItems="end"
+                gap={3} style={{marginTop: '2rem', width: '100%'}}> 
+
+                <TextField 
+                  label="Novo Tópico"
+                  placeholder="No que voce está pensando"
+                  multiline
+                  fullWidth
+                  required
+                  rows={4}
+                  inputProps={{maxLength: 250}}
+                  />
+
+                <Box> 
+
+                </Box>
+
+              </Box>  
+            )} 
+            
+            <TopicList items={profileTopics} />
+
+          </Box>
+        ): (
+          <TopicList items={topics} /> 
+        )}
+
+      </Box>
 
       <Snackbar
           open={Boolean(messageError)}

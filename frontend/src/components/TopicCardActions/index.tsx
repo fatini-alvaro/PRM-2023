@@ -2,8 +2,15 @@ import { ChatBubble, Repeat, FavoriteBorder } from '@mui/icons-material';
 import { Button } from '@mui/material';
 
 import './style.css';
+import { ITopic } from '../../@types';
 
-function TopicCardActions(){
+type TopicCardActionsProps = {
+  topic: ITopic
+}
+
+function TopicCardActions({
+  topic
+}){
   return (
 
     <div id="topic-card-actions">

@@ -13,7 +13,7 @@ function TopicList({ items }: TopicListProps) {
       display="flex"
       flexDirection="column"
       gap={3}
-      style={{ maxWidth: "64rem" }}
+      style={{ maxWidth: "64rem", marginTop: '2rem'}}
     >
       {items.map((item: any, index: number) => (
         <Box display="flex" flexDirection="column" gap={3}

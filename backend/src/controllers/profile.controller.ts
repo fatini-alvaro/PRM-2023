@@ -3,7 +3,7 @@ import { User } from "src/entities/user.entity";
 import { UserService } from "src/services/user.service";
 
 @UseInterceptors(ClassSerializerInterceptor)
-@Controller('profiles')
+@Controller('profile')
 export class ProfileController {
 
   constructor(private userService: UserService) {}

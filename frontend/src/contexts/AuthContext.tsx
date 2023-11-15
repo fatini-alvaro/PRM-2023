@@ -46,9 +46,11 @@ export function AuthContextProvider(props: AuthContextProviderProps) {
 
         const userToken: IUser = {
           id: payloadDecoded.userId,
-          fullname: payloadDecoded.fullname,
-          username: payloadDecoded.username
+          fullname: payloadDecoded.fullName,
+          username: payloadDecoded.userName
         }
+
+
 
         localStorage.setItem('user', JSON.stringify(userToken));
         localStorage.setItem('token', token);

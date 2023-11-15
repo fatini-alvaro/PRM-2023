@@ -12,7 +12,7 @@ export class UserService {
         private readonly repository: Repository<User>
     ) {}
 
-    findAll(): Promise<User[]> {
+    async findAll(): Promise<User[]> {
         return this.repository.find();
     }
 
@@ -20,7 +20,7 @@ export class UserService {
         return this.repository.findOneBy({id: id})
     }
 
-    findByUsername(username: string): Promise<User>{
+    async findByUsername(username: string): Promise<User>{
         return this.repository.findOneBy({username: username})
     }
 
