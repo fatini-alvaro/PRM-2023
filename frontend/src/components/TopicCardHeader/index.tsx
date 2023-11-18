@@ -15,21 +15,22 @@ function TopicCardHeader({
 }: TopicCardHeaderProps) {
   return (
     <div id="topic-card-header">
-      <Avatar alt={owner?.fullname}></Avatar>
+      <Avatar alt={owner?.fullname} />
 
       <div className="card-header-text">
         <Typography variant="h6">
-          <b>{owner?.fullname}</b>
+          {owner?.fullname}
         </Typography>
 
         <Typography variant="caption">
-          <IntlProvider locale="pt-BR">
-            Criado em <FormattedDate value={createdAt} day='2-digit'
-                                   month='2-digit' year='numeric'/>
+          <IntlProvider locale='pt-BR'>
+              Criado em <FormattedDate value={createdAt} day='2-digit'
+                              month='2-digit' year='numeric' />
           </IntlProvider>
+            
         </Typography>
-        
       </div>
+        
     </div>
   );
 }

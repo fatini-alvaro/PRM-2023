@@ -1,20 +1,20 @@
-import { Alert, Box, Fab, Snackbar, Tab, Tabs, TextField } from "@mui/material";
-import HeaderProfile from "../../components/HeaderProfile";
-import TopicList from "../../components/TopicList";
-import { SyntheticEvent, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { useAuth } from "../../hook/useAuth";
-import { getProfileByUsername, getTopicsByUsername } from "../../services";
-import { IUser } from "../../@types";
-import AddIcon from '@mui/icons-material/Add'
+import { Alert, Box, Button, Fab, Snackbar, Tab, Tabs, TextField } from "@mui/material"
+import HeaderProfile from "../../components/HeaderProfile"
+import TopicList from "../../components/TopicList"
+import { SyntheticEvent, useEffect, useState } from "react"
+import { useParams } from "react-router-dom"
+import { useAuth } from "../../hook/useAuth"
+import { createTopic, getProfileByUsername, getTopicsByUsername } from "../../services"
+import { ITopic, IUser } from "../../@types"
+import AddIcon from '@mui/icons-material/Add';
+import { LoadingButton } from "@mui/lab"
 
 function TopicPage() {
 
   //Profile
   const { user } = useAuth();
   const params = useParams();
-
-  const [profile, SetProfile] = useState<IUser>({});
+  const [profile, setProfile] = useState<IUser>({} as IUser);
   
   //State - Error Message
   const [messageError, setMessageError] = useState('');
@@ -22,37 +22,62 @@ function TopicPage() {
   const [loading, setLoading] = useState(false);
   
   //TOPICS
-  const [profileTopics, setProfileTopics] = useState([]);
-  const [topics, setTopics] = useState([]);
+  const [topics, setTopics] = useState<ITopic[]>([]);
+  const [profileTopics, setProfileTopics] = useState<ITopic[]>([]);
 
   //TABS
-  const [tab, setTab] = useState(1);
-  function handleTabChange(event: SyntheticEvent, newValue: number){
-    setTab(newValue);
+  const [tab, setTab] = useState(2);
+  function handleTabChange(event: SyntheticEvent, newValue: number) {
+    setTab(newValue)
   }
 
   //NEW TOPIC
-  const [showForm, SetShowForm] = useState(false)
-
+  const [showForm, setShowForm] = useState(false)
+  const [topicForm, setTopicForm] = useState<ITopic>({} as ITopic)
   function handleShowForm() {
-    SetShowForm(true);
+    setShowForm(true);
+    setTopicForm({
+      content: '',
+      owner: user
+    })
+  }
+
+  function handleCreateTopic() {
+    setLoading(true);
+
+    createTopic(topicForm)
+      .then(result => {
+        setProfileTopics([result.data, ...topics]);
+        setMessageSuccess('Tópico criado com sucesso!');
+        setTimeout(() => {
+          setMessageSuccess('');  
+        }, 5000);
+      })
+      .catch(error => {
+        setMessageError('Erro na handleCreateTopic: '+ error.message);
+      })
+      .finally(() => {
+        setShowForm(false);
+        setLoading(false);
+      });
   }
 
   useEffect(() => {
-
     const username = params.username ? params.username : user?.username;
+
     if (username) {
       getProfileByUsername(username)
       .then(result => {
-        SetProfile(result.data);
+        setProfile(result.data);
 
+        //Carregar topics do usuario (owner)
         return getTopicsByUsername(username)
-        .then(result => { 
-          setProfileTopics(result.data)
-        });
+          .then(result=> {
+            setProfileTopics(result.data)
+          })
       })
       .catch(error => {
-        setMessageError(String(error.message));
+        setMessageError(String(error.message))
       })
     }
 
@@ -82,7 +107,7 @@ function TopicPage() {
 
       <Box className="topic-page-content" style={{width: '64rem'}}>
 
-        {profile?.id == user?.id && (
+        {profile.id == user?.id && (
           <Tabs value={tab} onChange={handleTabChange}>
               <Tab value={1} label="Tópicos" />
               <Tab value={2} label="Meus Tópicos" />
@@ -102,20 +127,36 @@ function TopicPage() {
               <Box display="flex" flexDirection="column" alignItems="end"
                 gap={3} style={{marginTop: '2rem', width: '100%'}}> 
 
-                <TextField 
-                  label="Novo Tópico"
-                  placeholder="No que voce está pensando"
-                  multiline
-                  fullWidth
-                  required
-                  rows={4}
-                  inputProps={{maxLength: 250}}
-                  />
+                <TextField
+                    label="Novo Tópico"
+                    placeholder="No que você está pensando?"
+                    multiline
+                    fullWidth
+                    required
+                    autoFocus
+                    rows={4}
+                    disabled={loading}
+                    inputProps={{maxLength: 250}}
+                    value={ topicForm.content }
+                    onChange={event => setTopicForm({...topicForm, content: (event.target as HTMLInputElement).value})}
+                />
 
-                <Box> 
+                <Box display="flex" flexDirection="row" gap={3}>
+                  <Button
+                    size="small"
+                    disabled={loading}
+                    onClick={() => setShowForm(false)}>
+                    Cancelar
+                  </Button>
 
+                  <LoadingButton
+                    variant="contained"
+                    size="small"
+                    loading={loading}
+                    onClick={handleCreateTopic}>
+                    Comentar
+                  </LoadingButton>
                 </Box>
-
               </Box>  
             )} 
             
@@ -140,6 +181,18 @@ function TopicPage() {
           </Alert>
 
       </Snackbar>
+
+      <Snackbar 
+          open={Boolean(messageSuccess)}
+          anchorOrigin={{vertical:'top', horizontal: 'right'}}>
+          
+        <Alert severity="success"  
+        variant="filled"
+        onClose={() => setMessageSuccess('')}>
+            {messageSuccess}
+        </Alert>
+      </Snackbar>
+
     </Box>
   );
 }

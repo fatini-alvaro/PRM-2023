@@ -1,8 +1,9 @@
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
-import { User } from "./user.entity";
+import { User } from "../users/user.entity";
+import { Topic } from "src/topics/topic.entity";
 
 @Entity()
-export class Topic {
+export class Comment {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -11,7 +12,11 @@ export class Topic {
 
   @ManyToOne(() => User, {eager: true, nullable: false})
   @JoinColumn({name: 'user_id'})
-  owner: User;
+  user: User;
+
+  @ManyToOne(() => User, {eager: true, nullable: false})
+  @JoinColumn({name: 'topic_id'})
+  topic: Topic;
 
   @CreateDateColumn({name: 'created_at'})
   createdAt: Date;

@@ -1,18 +1,18 @@
-import { Typography } from '@mui/material';
+import { Typography } from "@mui/material";
 
 type TopicCardBodyProps = {
-  content: string
+    content: string
 }
-function TopicCardBody ({
-  content
-}){
-  return(
-    <div id="topic-card-body" style={{ marginLeft: "3rem" }}>
-      <Typography variant='body1'>
-         {content}
-      </Typography>  
-    </div>
-  )
+function TopicCardBody({
+    content
+}: TopicCardBodyProps) {
+    return (
+        <div id="topic-card-body" style={{marginLeft: '3rem'}}>
+            <Typography variant="body1">
+                {content}
+            </Typography>
+        </div>
+    )
 }
 
 export default TopicCardBody;
