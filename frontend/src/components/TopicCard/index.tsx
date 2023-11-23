@@ -119,10 +119,10 @@ function TopicCard({
 
             <Snackbar 
                 open={Boolean(messageError)}
-                autoHideDuration={600}
                 anchorOrigin={{vertical:'top', horizontal: 'right'}}>
                 
                 <Alert severity="error" 
+                elevation={6}
                 variant="filled"
                 onClose={() => setMessageError('')}>
                     {messageError}
@@ -132,10 +132,10 @@ function TopicCard({
 
             <Snackbar 
                 open={Boolean(messageSuccess)}
-                autoHideDuration={600}
                 anchorOrigin={{vertical:'top', horizontal: 'right'}}>
                 
                 <Alert severity="success"  
+                elevation={6}
                 variant="filled"
                 onClose={() => setMessageSuccess('')}>
                     {messageSuccess}

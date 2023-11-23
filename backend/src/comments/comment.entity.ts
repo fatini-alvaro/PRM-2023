@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { User } from "../users/user.entity";
 import { Topic } from "src/topics/topic.entity";
 
@@ -14,7 +14,7 @@ export class Comment {
   @JoinColumn({name: 'user_id'})
   user: User;
 
-  @ManyToOne(() => User, {eager: true, nullable: false})
+  @ManyToOne(() => Topic, {eager: true, nullable: false})
   @JoinColumn({name: 'topic_id'})
   topic: Topic;
 
