@@ -16,6 +16,8 @@ export interface ITopic {
   content: string;
   owner?: IUser;
   createdAt?: Date;
+  repost?: ITopic;
+  topic_id?: number;
 }
 
 export interface IComment {
@@ -25,3 +27,9 @@ export interface IComment {
   topic?:ITopic;
   createdAt?: Date;
 }
+
+// export interface ILike {
+//   id?: number;
+//   user?: IUser;
+//   topic?: ITopic;
+// }

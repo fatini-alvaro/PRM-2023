@@ -8,6 +8,7 @@ import { createTopic, getProfileByUsername, getTopicsByUsername } from "../../se
 import { ITopic, IUser } from "../../@types"
 import AddIcon from '@mui/icons-material/Add';
 import { LoadingButton } from "@mui/lab"
+import { useTopic } from "../../hook/useTopic"
 
 function TopicPage() {
 
@@ -22,7 +23,8 @@ function TopicPage() {
   const [loading, setLoading] = useState(false);
   
   //TOPICS
-  const [topics, setTopics] = useState<ITopic[]>([]);
+  const {topics, setTopics} = useTopic();
+  // const [topics, setTopics] = useState<ITopic[]>([]);
   const [profileTopics, setProfileTopics] = useState<ITopic[]>([]);
 
   //TABS
