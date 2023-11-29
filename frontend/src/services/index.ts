@@ -1,5 +1,5 @@
 import axios from "axios";
-import { IComment, ICredential, ITopic, IUser } from "../@types";
+import { IComment, ICredential, ILike, ITopic, IUser } from "../@types";
 
 //Busca o token da local Storage
 const token = localStorage.getItem('token');
@@ -15,7 +15,7 @@ const _PROFILE = '/profile';
 const _TOPICS = '/topics';
 const _COMMENTS = '/comments';
 const _REPOST = '/reposts';
-// const _LIKE = '/likes';
+const _LIKE = '/likes';
 
 
 //AUTH
@@ -44,9 +44,10 @@ const removeComment = (comment: IComment) => (api.delete(`${_COMMENTS}/${comment
 const getRepostsByTopic = (topic: ITopic) => (api.get(`${_REPOST}?topic=${topic.id}`));
 
 //LIKES
-// const getLikesByTopic = (topic: ITopic) => (api.get(`${_LIKE}?topic=${topic.id}`));
-// const creatLike = (comment: ILike) => (api.post(_LIKE, comment));
-// const removeLike = (comment: ILike) => (api.delete(`${_LIKE}/${comment.id}`));
+const getLikesByTopic = (topic: ITopic) => (api.get(`${_LIKE}?topic=${topic.id}`));
+const getLikeByUserInTopic = (topic: ITopic, user: IUser) => (api.get(`${_LIKE}?topic=${topic.id}&user=${user.id}`));
+const createLike = (like: ILike) => (api.post(_LIKE, like));
+const removeLike = (like: ILike) => (api.delete(`${_LIKE}/${like.id}`));
 
 
 export {
@@ -59,5 +60,9 @@ export {
   createComment,
   removeComment,
   getRepostsByTopic,
-  getTopicById
+  getTopicById,
+  getLikesByTopic,
+  getLikeByUserInTopic,
+  createLike,
+  removeLike
 }

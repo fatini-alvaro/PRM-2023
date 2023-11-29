@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { IComment, ITopic, IUser } from "../../@types";
+import { IComment, ILike, ITopic, IUser } from "../../@types";
 import TopicCardActions from "../TopicCardActions";
 import TopicCardBody from "../TopicCardBody";
 import TopicCardHeader from "../TopicCardHeader";
 import { Alert, Snackbar } from "@mui/material";
 import TopicComment from "../TopicComment";
-import { createComment, createTopic, getCommentsByTopic, getRepostsByTopic, getTopicById } from "../../services";
+import { createComment, createLike, createTopic, getCommentsByTopic, getLikesByTopic, getRepostsByTopic, getTopicById } from "../../services";
 import { useAuth } from "../../hook/useAuth";
 import { useTopic } from "../../hook/useTopic";
 
@@ -102,6 +102,47 @@ function TopicCard({
     }
 
     //LIKES
+    const [likeTopic, setlikeTopic] = useState<ITopic>();
+    const [likers, setLikers] = useState<IUser[]>([]);
+    const handleClickLike = () => {
+
+        debugger;
+
+        //Preparar um like
+        const likeForm: ILike = {
+            user: user,
+            topic: topic
+        }
+
+        //Chamar a service que manda o topic para servidor
+        createLike(likeForm)
+            .then(result => {
+                
+                getLikesByTopic(topic)
+                    .then(likes => {                      
+                        const dados: ILike[] = likes.data;
+
+                        const users: IUser[] = []
+                        dados.forEach(ilike => {
+                            if (ilike.user) {
+                                users.push(ilike.user)
+                            }
+                        })
+                        setLikers(users);
+                    })
+                    .catch(error => {
+                        setMessageError(error.message);
+                    }); 
+
+                setMessageSuccess('Like adicionado com sucesso!');
+                setTimeout(() => {
+                    setMessageSuccess('');
+                }, 5000);
+            })
+            .catch(error => {
+                setMessageError(error.message)
+            });
+    }
 
     //EFFECT
     useEffect(() => {
@@ -150,6 +191,22 @@ function TopicCard({
                 setMessageError(error.message);
             });    
         //TO-DO: Likes
+        getLikesByTopic(topic)
+        .then(result => {
+            const dados: ILike[] = result.data;
+
+            const users: IUser[] = []
+            dados.forEach(ilike => {
+                if (ilike.user) {
+                    users.push(ilike.user)
+                }
+            })
+            setLikers(users);
+        })
+        .catch(error => {
+            debugger;
+            setMessageError(error.message);
+        });    
 
     }, []);
 
@@ -169,7 +226,10 @@ function TopicCard({
                 clickComment={handleClickComment}
 
                 reposters={reposters}
-                clickRepost={handleClickRepost}/>
+                clickRepost={handleClickRepost}
+                
+                likers={likers}
+                clickLike={handleClickLike}/>
 
             {showComments && (
                 <TopicComment 

@@ -1,8 +1,8 @@
-import { ChatBubble, ChatBubbleOutline, FavoriteBorder, Repeat } from "@mui/icons-material";
+import { ChatBubble, ChatBubbleOutline, Favorite, FavoriteBorder, Repeat } from "@mui/icons-material";
 import { Avatar, Box, Button, Tooltip, Typography } from "@mui/material";
 
 import './style.css';
-import { IUser } from "../../@types";
+import { ILike, IUser } from "../../@types";
 
 type TopicCardActionsProps = {
    commented: boolean,
@@ -11,13 +11,18 @@ type TopicCardActionsProps = {
 
    reposters: IUser[],
    clickRepost: () => void,
+
+   likers: IUser[],
+   clickLike: () => void
 }
 function TopicCardActions({
     commented,
     totalComments,
     clickComment,
     reposters,
-    clickRepost
+    clickRepost,
+    likers,
+    clickLike
 }: TopicCardActionsProps) {
     return (
         <div id="topic-card-actions">
@@ -51,9 +56,36 @@ function TopicCardActions({
                 </Button>
             </Tooltip>
 
-            <Button variant="text" size="small" startIcon={<FavoriteBorder />}>
-                {/* {likers.length} */}
-            </Button>
+            <Tooltip title={
+                true ? (
+                    <Box display="flex" flexDirection="column" gap={1}
+                        style={{padding: '0.5rem'}}>
+
+                            {likers.map((user, index) => (
+                                <Box display="flex" flexDirection="row" gap={1} key={index}>
+                                    <Avatar alt={user.fullname} sx={{width: 24, height: 24}} />
+                                    <Typography variant="body2">
+                                        {user.fullname}
+                                    </Typography>
+                                </Box>
+                            ))}
+                    </Box>
+                ) : (
+                    <span>Curtir</span>
+                )
+            }>
+
+                { likers.length > 0 ? (
+                        <Button variant="text" size="small" startIcon={<Favorite />} onClick={clickLike}>
+                            {likers.length}
+                        </Button> 
+                    ) : (
+                        <Button variant="text" size="small" startIcon={<FavoriteBorder />} onClick={clickLike}>
+                            0
+                        </Button>
+                    )
+                }
+            </Tooltip>
         </div>
     )
 }

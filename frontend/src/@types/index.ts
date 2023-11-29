@@ -28,8 +28,8 @@ export interface IComment {
   createdAt?: Date;
 }
 
-// export interface ILike {
-//   id?: number;
-//   user?: IUser;
-//   topic?: ITopic;
-// }
+export interface ILike {
+  id?: number;
+  user?: IUser;
+  topic?: ITopic;
+}
